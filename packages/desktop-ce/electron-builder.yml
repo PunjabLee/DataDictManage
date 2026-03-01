@@ -1,0 +1,44 @@
+appId: com.datadictmanage.ce
+productName: DataDictManage
+copyright: Copyright © 2024 DDM Team
+
+# 输出目录
+directories:
+  output: dist/packages
+  buildResources: build
+
+# 文件包含规则
+files:
+  - dist/**/*
+  - node_modules/**/*
+  - package.json
+
+# macOS 配置
+mac:
+  category: public.app-category.developer-tools
+  icon: build/icon.icns
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+
+# Windows 配置
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+
+# Linux 配置
+linux:
+  category: Development
+  icon: build/icon.png
+  target:
+    - target: AppImage
+    - target: deb
