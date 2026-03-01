@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: pdmaas-gateway
+
+  # Redis（限流 + Session）
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+
+  cloud:
+    gateway:
+      # 全局 CORS 配置
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: [GET, POST, PUT, DELETE, PATCH, OPTIONS]
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+      # 路由配置
+      routes:
+        # 认证服务
+        - id: auth-service
+          uri: http://${AUTH_SERVICE_HOST:localhost}:${AUTH_SERVICE_PORT:8081}
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=1
+
+        # 建模服务（需要认证）
+        - id: modeling-service
+          uri: http://${MODELING_SERVICE_HOST:localhost}:${MODELING_SERVICE_PORT:8082}
+          predicates:
+            - Path=/api/modeling/**
+          filters:
+            - StripPrefix=1
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100
+                redis-rate-limiter.burstCapacity: 200
+
+# JWT 配置（网关解析 Token）
+jwt:
+  secret: ${JWT_SECRET:ddm-ee-super-secret-key-change-in-production}
+
+# 日志
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    com.datadictmanage: DEBUG
