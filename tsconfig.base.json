@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ddm/core-engine": ["./packages/core-engine/src/index.ts"],
+      "@ddm/canvas-render": ["./packages/canvas-render/src/index.ts"],
+      "@ddm/shared-ui": ["./packages/shared-ui/src/index.ts"],
+      "@ddm/db-dialect": ["./packages/db-dialect/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "**/node_modules", "**/dist"]
+}
