@@ -6,12 +6,12 @@
 
   <parent>
     <groupId>com.datadictmanage</groupId>
-    <artifactId>pdmaas-parent</artifactId>
+    <artifactId>ddp-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>pdmaas-gateway</artifactId>
-  <name>PDMaaS Gateway</name>
+  <artifactId>ddp-gateway</artifactId>
+  <name>DataDictPlatform Gateway</name>
   <description>API 网关模块 — 基于 Spring Cloud Gateway（路由、认证过滤、限流）</description>
 
   <dependencies>
@@ -24,7 +24,7 @@
     <!-- 公共模块 -->
     <dependency>
       <groupId>com.datadictmanage</groupId>
-      <artifactId>pdmaas-common</artifactId>
+      <artifactId>ddp-common</artifactId>
       <exclusions>
         <!-- Gateway 是响应式的，排除 Servlet Web -->
         <exclusion>

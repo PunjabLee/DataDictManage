@@ -108,4 +108,4 @@ feature/xxx       ← 功能开发（从 develop 切出）
 
 ---
 
-*由 小jeep 🚙 构建 · DataDictManage Team*
+<span style="color:#7c3aed">*由 小jeep 🟣 构建 · DataDictManage Team*</span>

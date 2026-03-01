@@ -85,15 +85,15 @@ cd /workspace/DataDictManage/services/ee-backend
 mvn clean install -DskipTests
 
 # 启动认证服务
-cd pdmaas-auth
+cd ddp-auth
 mvn spring-boot:run
 
 # 另开终端，启动建模服务
-cd ../pdmaas-modeling
+cd ../ddp-modeling
 mvn spring-boot:run
 
 # 另开终端，启动网关（可选，单机开发可直接访问子服务）
-cd ../pdmaas-gateway
+cd ../ddp-gateway
 mvn spring-boot:run
 ```
 

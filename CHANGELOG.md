@@ -43,11 +43,11 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 建模设计器页面（Canvas + Sidebar + Toolbar 布局）
 
 #### ee-backend (Spring Boot 3, Java 17)
-- Maven 多模块（pdmaas-common/gateway/auth/modeling）
-- `pdmaas-common`：统一响应 `R<T>`、`BizException`、全局异常处理器、分页工具
-- `pdmaas-gateway`：Spring Cloud Gateway 路由/限流配置
-- `pdmaas-auth`：JWT 签发（JJWT 0.12）、登录/刷新/登出接口
-- `pdmaas-modeling`：完整 DDD 四层
+- Maven 多模块（ddp-common/gateway/auth/modeling）
+- `ddp-common`：统一响应 `R<T>`、`BizException`、全局异常处理器、分页工具
+- `ddp-gateway`：Spring Cloud Gateway 路由/限流配置
+- `ddp-auth`：JWT 签发（JJWT 0.12）、登录/刷新/登出接口
+- `ddp-modeling`：完整 DDD 四层
   - 接入层：`ModelController`、`ModelVO`
   - 应用层：`ModelingFacade`、`CreateModelDTO`、`ModelAssembler`
   - 领域层：`ModelBO/EntityBO/FieldBO`、`ModelRepository`（接口）、`ModelDomainService`、`ModelCreatedEvent`

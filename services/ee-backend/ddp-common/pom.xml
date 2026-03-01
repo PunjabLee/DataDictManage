@@ -6,12 +6,12 @@
 
   <parent>
     <groupId>com.datadictmanage</groupId>
-    <artifactId>pdmaas-parent</artifactId>
+    <artifactId>ddp-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>pdmaas-common</artifactId>
-  <name>PDMaaS Common</name>
+  <artifactId>ddp-common</artifactId>
+  <name>DataDictPlatform Common</name>
   <description>公共模块 — 统一响应、异常处理、分页工具等</description>
 
   <dependencies>

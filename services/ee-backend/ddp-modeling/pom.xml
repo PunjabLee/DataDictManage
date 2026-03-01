@@ -6,19 +6,19 @@
 
   <parent>
     <groupId>com.datadictmanage</groupId>
-    <artifactId>pdmaas-parent</artifactId>
+    <artifactId>ddp-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>pdmaas-modeling</artifactId>
-  <name>PDMaaS Modeling</name>
+  <artifactId>ddp-modeling</artifactId>
+  <name>DataDictPlatform Modeling</name>
   <description>建模微服务 — DDD 分层（接入层/应用层/领域层/基础设施层）</description>
 
   <dependencies>
     <!-- 公共模块 -->
     <dependency>
       <groupId>com.datadictmanage</groupId>
-      <artifactId>pdmaas-common</artifactId>
+      <artifactId>ddp-common</artifactId>
     </dependency>
 
     <!-- Spring Web -->

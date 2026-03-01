@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: pdmaas-auth
+    name: ddp-auth
 
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:ddm_ee}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai

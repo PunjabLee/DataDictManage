@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: pdmaas-gateway
+    name: ddp-gateway
 
   # Redis（限流 + Session）
   data:
