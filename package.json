@@ -1,0 +1,34 @@
+{
+  "name": "datadictmanage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "数据字典管理平台 — 企业级元数据建模与数据标准管理系统",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "type-check": "turbo run type-check",
+    "format": "prettier --write \"**/*.{ts,tsx,vue,js,json,md}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "turbo": "^1.13.0",
+    "typescript": "^5.4.0",
+    "prettier": "^3.2.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "lint-staged": {
+    "*.{ts,tsx,vue,js}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,yaml}": ["prettier --write"]
+  }
+}

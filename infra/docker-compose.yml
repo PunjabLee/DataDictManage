@@ -1,0 +1,87 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ddm-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ddm_root_2026
+      MYSQL_DATABASE: datadictmanage
+      MYSQL_USER: ddm
+      MYSQL_PASSWORD: ddm_dev_2026
+    ports:
+      - "3306:3306"
+    volumes:
+      - ddm_mysql_data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/02_schema.sql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --default-authentication-plugin=mysql_native_password
+      --innodb-buffer-pool-size=512M
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "ddm", "-pddm_dev_2026"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: ddm-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass ddm_redis_2026 --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - ddm_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "ddm_redis_2026", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: ddm-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ddm
+      RABBITMQ_DEFAULT_PASS: ddm_mq_2026
+      RABBITMQ_DEFAULT_VHOST: /ddm
+    ports:
+      - "5672:5672"    # AMQP 协议端口
+      - "15672:15672"  # Web 管理界面
+    volumes:
+      - ddm_rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: ddm-minio
+    environment:
+      MINIO_ROOT_USER: ddm_minio
+      MINIO_ROOT_PASSWORD: ddm_minio_2026
+    ports:
+      - "9000:9000"    # API 端口
+      - "9001:9001"    # Web 控制台
+    volumes:
+      - ddm_minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  ddm_mysql_data:
+  ddm_redis_data:
+  ddm_rabbitmq_data:
+  ddm_minio_data:
+
+networks:
+  default:
+    name: ddm-network

@@ -1,0 +1,3 @@
+-- 数据库初始化脚本
+CREATE DATABASE IF NOT EXISTS datadictmanage DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE datadictmanage;
