@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * 职责：
  *   Spring Cloud Gateway 网关服务，统一处理：
- *   - 路由转发（将请求路由到 ddp-modeling、ddp-auth 等微服务）
+ *   - 路由转发（将请求路由到 pdmaas-modeling、pdmaas-auth 等微服务）
  *   - JWT Token 校验（AuthGlobalFilter）
  *   - 请求限流（Redis + RequestRateLimiter）
  *   - 跨域配置（CORS）

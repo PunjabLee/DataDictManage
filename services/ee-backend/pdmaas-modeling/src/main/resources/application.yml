@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ddp-modeling
+    name: pdmaas-modeling
 
   # 数据库配置
   datasource:
