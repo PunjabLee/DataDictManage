@@ -1,0 +1,25 @@
+{
+  "name": "@ddm/db-dialect",
+  "version": "1.0.0",
+  "description": "DDM 数据库方言适配器 — 支持 MySQL/PG/Oracle/达梦/金仓/SQLServer/ClickHouse",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "sideEffects": false,
+  "keywords": ["database", "dialect", "ddl", "mysql", "postgresql", "oracle", "dameng", "kingbase"]
+}

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ddm/core-engine": ["../../packages/core-engine/src/index.ts"],
+      "@ddm/canvas-render": ["../../packages/canvas-render/src/index.ts"],
+      "@ddm/db-dialect": ["../../packages/db-dialect/src/index.ts"]
+    }
+  },
+  "include": ["src/renderer/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
