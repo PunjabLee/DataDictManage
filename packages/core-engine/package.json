@@ -1,0 +1,17 @@
+{
+  "name": "@ddm/core-engine",
+  "version": "1.0.0",
+  "description": "DDM 领域核心引擎 — DDD 领域模型、应用服务、仓储接口",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^1.4.0"
+  }
+}
