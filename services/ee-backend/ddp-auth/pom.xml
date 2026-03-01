@@ -6,18 +6,18 @@
 
   <parent>
     <groupId>com.datadictmanage</groupId>
-    <artifactId>ddp-parent</artifactId>
+    <artifactId>pdmaas-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>ddp-auth</artifactId>
-  <name>DataDictPlatform Auth</name>
+  <artifactId>pdmaas-auth</artifactId>
+  <name>PDMaaS Auth</name>
   <description>认证授权微服务 — JWT Token 签发与校验</description>
 
   <dependencies>
     <dependency>
       <groupId>com.datadictmanage</groupId>
-      <artifactId>ddp-common</artifactId>
+      <artifactId>pdmaas-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
