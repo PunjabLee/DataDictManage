@@ -6,9 +6,11 @@
  * @module @ddm/desktop-ce
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useModelStore } from '../store/model.store'
 import { useModelActions } from '../hooks/useModel'
+import { FieldEditor, AddFieldForm } from './FieldEditor'
+import type { FieldDTO, EntityDTO } from '@ddm/core-engine'
 
 /**
  * 字段编辑面板
@@ -21,6 +23,12 @@ export const FieldPanel: React.FC = () => {
 
   const [newEntityName, setNewEntityName] = useState('')
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null)
+  const [showAddField, setShowAddField] = useState(false)
+
+  // 获取当前选中的字段
+  const selectedField = selectedFieldId && editingEntity
+    ? editingEntity.fields.find(f => f.id === selectedFieldId)
+    : null
 
   if (!showFieldPanel) return null
 
@@ -28,11 +36,15 @@ export const FieldPanel: React.FC = () => {
     <div className="w-80 bg-white border-l border-slate-200 flex flex-col h-full">
       {/* 面板头部 */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
-        <h3 className="font-semibold text-slate-800">
+        <h3 className="font-semibold text-slate-800 truncate">
           {editingEntity ? editingEntity.name : '添加数据表'}
         </h3>
         <button
-          onClick={closeFieldPanel}
+          onClick={() => {
+            setSelectedFieldId(null)
+            setShowAddField(false)
+            closeFieldPanel()
+          }}
           className="w-6 h-6 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-600"
         >
           ×
@@ -42,11 +54,25 @@ export const FieldPanel: React.FC = () => {
       {/* 面板内容 */}
       <div className="flex-1 overflow-y-auto p-4">
         {editingEntity ? (
-          <EntityFieldsView 
-            entity={editingEntity} 
-            onSelectField={setSelectedFieldId}
-            selectedFieldId={selectedFieldId}
-          />
+          showAddField ? (
+            <AddFieldForm
+              entityId={editingEntity.id}
+              onClose={() => setShowAddField(false)}
+            />
+          ) : selectedField ? (
+            <FieldEditor
+              entityId={editingEntity.id}
+              field={selectedField}
+              onClose={() => setSelectedFieldId(null)}
+            />
+          ) : (
+            <EntityFieldsView 
+              entity={editingEntity} 
+              onSelectField={setSelectedFieldId}
+              selectedFieldId={selectedFieldId}
+              onAddField={() => setShowAddField(true)}
+            />
+          )
         ) : (
           <AddEntityForm 
             name={newEntityName}
@@ -54,6 +80,7 @@ export const FieldPanel: React.FC = () => {
             onSubmit={async (name, comment) => {
               if (currentModel) {
                 await addEntity(name, comment)
+                setNewEntityName('')
                 closeFieldPanel()
               }
             }}
@@ -113,23 +140,13 @@ const AddEntityForm: React.FC<{
 // ── 实体字段视图 ─────────────────────────────────────────────────────────
 
 const EntityFieldsView: React.FC<{
-  entity: import('@ddm/core-engine').EntityDTO
+  entity: EntityDTO
   selectedFieldId: string | null
   onSelectField: (id: string | null) => void
-}> = ({ entity, selectedFieldId, onSelectField }) => {
-  const { addEntity, removeEntity, currentModel } = useModelActions()
-  const { updateModel, setLoading, setError } = useModelStore()
-
-  const handleAddField = async () => {
-    if (!currentModel) return
-    // 简化的添加字段调用
-    try {
-      // TODO: 调用 API 添加字段
-      console.log('Add field to', entity.id)
-    } catch (err) {
-      setError(String(err))
-    }
-  }
+  onAddField: () => void
+}> = ({ entity, selectedFieldId, onSelectField, onAddField }) => {
+  const { removeEntity } = useModelActions()
+  const { currentModel } = useModelStore()
 
   return (
     <div className="space-y-4">
@@ -146,7 +163,7 @@ const EntityFieldsView: React.FC<{
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-slate-700">字段 ({entity.fields.length})</span>
           <button
-            onClick={handleAddField}
+            onClick={onAddField}
             className="text-xs text-blue-500 hover:text-blue-600"
           >
             + 添加字段
