@@ -99,9 +99,18 @@ class InMemoryModelRepository implements ModelRepository {
 
 /**
  * SQL 引擎端口实现
+ * 使用 @ddm/db-dialect 真实方言
  */
+import { DialectRegistry } from '@ddm/db-dialect'
+
 class LocalSqlEngine implements SqlEnginePort {
   generateCreateTable(entity: import('@ddm/core-engine').Entity, dbType: string): string {
+    const dialect = DialectRegistry.get(dbType.toUpperCase())
+    if (dialect) {
+      return dialect.generateCreateTable(entity)
+    }
+    
+    // Fallback: 简单实现
     const lines = [`CREATE TABLE ${entity.name} (`]
     const fields: string[] = []
 
@@ -109,8 +118,8 @@ class LocalSqlEngine implements SqlEnginePort {
       let typeStr = this.mapType(field.dataType.baseType, field.dataType.length, dbType)
       if (!field.nullable) typeStr += ' NOT NULL'
       if (field.primaryKey) typeStr += ' PRIMARY KEY'
-      if (field.autoIncrement && ['MYSQL', 'ORACLE'].includes(dbType)) typeStr += ' AUTO_INCREMENT'
-      fields.push(`  ${field.name} ${typeStr}`)
+      if (field.autoIncrement && ['MYSQL', 'ORACLE'].includes(dbType.toUpperCase())) typeStr += ' AUTO_INCREMENT'
+      fields.push(`  ${this.quoteName(entity.name, dbType)}.${this.quoteName(field.name, dbType)} ${typeStr}`)
     }
 
     lines.push(fields.join(',\n'))
@@ -119,18 +128,21 @@ class LocalSqlEngine implements SqlEnginePort {
   }
 
   generateDiffDDL(diffs: import('@ddm/core-engine').ModelDiffResult, dbType: string): string {
-    // 简化实现
+    const dialect = DialectRegistry.get(dbType.toUpperCase())
+    if (dialect && 'generateDiffDDL' in dialect) {
+      return (dialect as any).generateDiffDDL(diffs)
+    }
     return `-- Diff not implemented for ${dbType}`
   }
 
   private mapType(baseType: string, length: number | undefined, dbType: string): string {
     const typeMap: Record<string, Record<string, string>> = {
-      STRING: { mysql: 'VARCHAR', oracle: 'VARCHAR2', postgres: 'VARCHAR' },
-      INT: { mysql: 'INT', oracle: 'NUMBER', postgres: 'INT' },
-      BIGINT: { mysql: 'BIGINT', oracle: 'NUMBER(19)', postgres: 'BIGINT' },
-      DECIMAL: { mysql: 'DECIMAL', oracle: 'NUMBER', postgres: 'DECIMAL' },
-      DATETIME: { mysql: 'DATETIME', oracle: 'TIMESTAMP', postgres: 'TIMESTAMP' },
-      TEXT: { mysql: 'TEXT', oracle: 'CLOB', postgres: 'TEXT' },
+      STRING: { mysql: 'VARCHAR', oracle: 'VARCHAR2', postgres: 'VARCHAR', dameng: 'VARCHAR', kingbase: 'VARCHAR' },
+      INT: { mysql: 'INT', oracle: 'NUMBER', postgres: 'INT', dameng: 'INTEGER', kingbase: 'INTEGER' },
+      BIGINT: { mysql: 'BIGINT', oracle: 'NUMBER(19)', postgres: 'BIGINT', dameng: 'BIGINT', kingbase: 'BIGINT' },
+      DECIMAL: { mysql: 'DECIMAL', oracle: 'NUMBER', postgres: 'DECIMAL', dameng: 'DECIMAL', kingbase: 'NUMERIC' },
+      DATETIME: { mysql: 'DATETIME', oracle: 'TIMESTAMP', postgres: 'TIMESTAMP', dameng: 'TIMESTAMP', kingbase: 'TIMESTAMP' },
+      TEXT: { mysql: 'TEXT', oracle: 'CLOB', postgres: 'TEXT', dameng: 'TEXT', kingbase: 'TEXT' },
     }
 
     const mapping = typeMap[baseType] ?? {}
@@ -139,6 +151,13 @@ class LocalSqlEngine implements SqlEnginePort {
     if (baseType === 'STRING' && length) return `${type}(${length})`
     if (baseType === 'DECIMAL') return `${type}`
     return type
+  }
+
+  private quoteName(name: string, dbType: string): string {
+    const upper = dbType.toUpperCase()
+    if (['MYSQL', 'CLICKHOUSE'].includes(upper)) return `\`${name}\``
+    if (['ORACLE', 'DAMENG', 'KINGBASE', 'SQLSERVER'].includes(upper)) return `"${name}"`
+    return `"${name}"`
   }
 }
 

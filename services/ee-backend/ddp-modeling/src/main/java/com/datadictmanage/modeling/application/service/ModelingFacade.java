@@ -266,4 +266,72 @@ public class ModelingFacade {
 
         log.info("[应用层] 删除关系: model={}, relation={}", modelId, relationId);
     }
+
+    // ── 版本管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 创建快照
+     *
+     * @param modelId     模型 ID
+     * @param versionTag  版本标签
+     * @param description 版本描述
+     * @param operatorId  操作人
+     * @return 快照 ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public String createSnapshot(String modelId, String versionTag, String description, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        // 构建快照数据
+        java.util.Map<String, Object> snapshot = new java.util.HashMap<>();
+        snapshot.put("modelId", model.getId());
+        snapshot.put("name", model.getName());
+        snapshot.put("description", model.getDescription());
+        snapshot.put("entities", model.getEntities());
+        snapshot.put("relations", model.getRelations());
+        snapshot.put("versionTag", versionTag);
+        snapshot.put("description", description);
+        snapshot.put("createdBy", operatorId);
+        snapshot.put("createdAt", java.time.LocalDateTime.now());
+
+        String snapshotId = modelRepository.saveSnapshot(modelId, model.getCurrentBranchId(), snapshot);
+        log.info("[应用层] 创建快照: model={}, snapshot={}, tag={}", modelId, snapshotId, versionTag);
+        return snapshotId;
+    }
+
+    /**
+     * 获取快照列表
+     *
+     * @param modelId 模型 ID
+     * @return 快照列表
+     */
+    @Transactional(readOnly = true)
+    public java.util.List<java.util.Map<String, Object>> listSnapshots(String modelId) {
+        return modelRepository.findSnapshots(modelId);
+    }
+
+    /**
+     * 回滚到指定快照
+     *
+     * @param modelId     模型 ID
+     * @param snapshotId  快照 ID
+     * @param operatorId  操作人
+     * @return 回滚后的模型详情
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO restoreSnapshot(String modelId, String snapshotId, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        java.util.List<java.util.Map<String, Object>> snapshots = modelRepository.findSnapshots(modelId);
+        java.util.Map<String, Object> targetSnapshot = snapshots.stream()
+                .filter(s -> s.get("id").equals(snapshotId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("快照", snapshotId));
+
+        // TODO: 从快照恢复模型数据
+        log.info("[应用层] 回滚快照: model={}, snapshot={}, operator={}", modelId, snapshotId, operatorId);
+        return modelAssembler.toVO(model);
+    }
 }

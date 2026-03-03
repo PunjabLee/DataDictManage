@@ -5,6 +5,7 @@ import com.datadictmanage.modeling.application.dto.CreateModelDTO;
 import com.datadictmanage.modeling.application.dto.AddFieldDTO;
 import com.datadictmanage.modeling.application.dto.UpdateFieldDTO;
 import com.datadictmanage.modeling.application.dto.RelationDTO;
+import com.datadictmanage.modeling.application.dto.CreateSnapshotDTO;
 import com.datadictmanage.modeling.application.service.ModelingFacade;
 import com.datadictmanage.modeling.interfaces.vo.ModelVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -210,5 +211,50 @@ public class ModelController {
     ) {
         modelingFacade.deleteRelation(modelId, relationId, operatorId);
         return R.ok();
+    }
+
+    // ── 版本管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 创建快照
+     *
+     * POST /modeling/models/{modelId}/snapshots
+     */
+    @Operation(summary = "创建快照")
+    @PostMapping("/{modelId}/snapshots")
+    public R<String> createSnapshot(
+            @PathVariable String modelId,
+            @Valid @RequestBody CreateSnapshotDTO dto,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        return R.ok(modelingFacade.createSnapshot(modelId, dto.getVersionTag(), dto.getDescription(), operatorId));
+    }
+
+    /**
+     * 获取快照列表
+     *
+     * GET /modeling/models/{modelId}/snapshots
+     */
+    @Operation(summary = "获取快照列表")
+    @GetMapping("/{modelId}/snapshots")
+    public R<List<java.util.Map<String, Object>>> listSnapshots(
+            @PathVariable String modelId
+    ) {
+        return R.ok(modelingFacade.listSnapshots(modelId));
+    }
+
+    /**
+     * 回滚到指定快照
+     *
+     * POST /modeling/models/{modelId}/snapshots/{snapshotId}/restore
+     */
+    @Operation(summary = "回滚快照")
+    @PostMapping("/{modelId}/snapshots/{snapshotId}/restore")
+    public R<ModelVO> restoreSnapshot(
+            @PathVariable String modelId,
+            @PathVariable String snapshotId,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        return R.ok(modelingFacade.restoreSnapshot(modelId, snapshotId, operatorId));
     }
 }
