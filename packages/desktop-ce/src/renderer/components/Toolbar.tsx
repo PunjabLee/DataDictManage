@@ -10,6 +10,7 @@ import React, { useState } from 'react'
 import { useUndoRedo, useModelActions } from '../hooks/useModel'
 import { useModelStore } from '../store/model.store'
 import { DDLModal } from './DDLModal'
+import { VersionPanel } from './VersionPanel'
 
 interface ToolbarProps {
   modelName: string
@@ -33,6 +34,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const { undo, redo, canUndo, canRedo } = useUndoRedo()
   const { currentModel } = useModelStore()
   const [showDDLModal, setShowDDLModal] = useState(false)
+  const [showVersionPanel, setShowVersionPanel] = useState(false)
 
   return (
     <>
@@ -82,14 +84,26 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             <span>⚙</span>
             <span>生成 DDL</span>
           </button>
+
+          {/* 版本管理 */}
+          <button
+            onClick={() => setShowVersionPanel(true)}
+            disabled={!currentModel}
+            className="flex items-center gap-1.5 px-3 py-1 border border-slate-300 hover:bg-slate-50 disabled:bg-slate-100 disabled:cursor-not-allowed text-slate-600 text-xs font-medium rounded transition-colors"
+            title="版本管理"
+          >
+            <span>📋</span>
+            <span>版本</span>
+          </button>
         </div>
       </header>
 
       {/* DDL 预览弹窗 */}
       <DDLModal isOpen={showDDLModal} onClose={() => setShowDDLModal(false)} />
+
+      {/* 版本管理面板 */}
+      <VersionPanel isOpen={showVersionPanel} onClose={() => setShowVersionPanel(false)} />
     </>
-  )
-}
 
 // ── 子组件 ────────────────────────────────────────────────────────────────
 
