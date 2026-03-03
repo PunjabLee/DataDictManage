@@ -13,14 +13,14 @@
 
 ### 🔴 高优先级
 
-| 序号 | 标题 | 描述 | 模块 | 预计工时 |
-|------|------|------|------|----------|
-| TD-01 | DDL 生成对接 | generateDDL 需实际调用 db-dialect 模块 | desktop-ce | 2h |
-| TD-02 | 快捷键系统缺失 | 缺少键盘快捷键支持 (Ctrl+Z/Y, Delete 等) | desktop-ce | 1h |
-| TD-03 | 模型持久化 | localStorage + IPC 存取未完整实现 | desktop-ce | 2h |
-| TD-04 | 版本管理后端 | 快照创建/回滚 API 未实现 | ee-backend | 3h |
-| TD-05 | ModelAssembler 完善 | EntityBO/FieldBO → DTO 映射不完整 | ee-backend | 1h |
-| TD-06 | ModelRepositoryImpl | MyBatis 实现类缺失 | ee-backend | 4h |
+| 序号 | 标题 | 描述 | 模块 | 预计工时 | 状态 |
+|------|------|------|------|----------|------|
+| TD-01 | DDL 生成对接 | generateDDL 需实际调用 db-dialect 模块 | desktop-ce | 2h | ✅ |
+| TD-02 | 快捷键系统缺失 | 缺少键盘快捷键支持 (Ctrl+Z/Y, Delete 等) | desktop-ce | 1h | ✅ |
+| TD-03 | 模型持久化 | localStorage + IPC 存取未完整实现 | desktop-ce | 2h | ✅ |
+| TD-04 | 版本管理后端 | 快照创建/回滚 API 未实现 | ee-backend | 3h | ✅ |
+| TD-05 | ModelAssembler 完善 | EntityBO/FieldBO → DTO 映射不完整 | ee-backend | 1h | ✅ |
+| TD-06 | ModelRepositoryImpl | MyBatis 实现类缺失 | ee-backend | 4h | ⏳ |
 
 ### 🟡 中优先级
 
