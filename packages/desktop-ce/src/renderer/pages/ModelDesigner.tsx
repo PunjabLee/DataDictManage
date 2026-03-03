@@ -21,6 +21,7 @@ import { useModelStore } from '../store/model.store'
 import { useModelLoader } from '../hooks/useModel'
 import { Sidebar } from '../components/Sidebar'
 import { Toolbar } from '../components/Toolbar'
+import { FieldPanel } from '../components/FieldPanel'
 import { CanvasEngine, RenderGraph, RenderNode, RenderEdge, NodeState, EdgeStyle, RelationMark } from '@ddm/canvas-render'
 
 /**
@@ -178,6 +179,9 @@ export const ModelDesigner: React.FC = () => {
           {/* 缩放比例显示 */}
           <ZoomIndicator engineRef={engineRef} />
         </div>
+
+        {/* 右侧字段编辑面板 */}
+        <FieldPanel />
       </div>
     </div>
   )

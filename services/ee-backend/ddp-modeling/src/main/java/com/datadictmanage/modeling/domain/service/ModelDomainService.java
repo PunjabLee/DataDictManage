@@ -4,6 +4,9 @@ import com.datadictmanage.modeling.domain.model.ModelBO;
 import com.datadictmanage.modeling.domain.model.EntityBO;
 import com.datadictmanage.modeling.domain.model.FieldBO;
 import com.datadictmanage.modeling.domain.repository.ModelRepository;
+import com.datadictmanage.modeling.application.dto.AddFieldDTO;
+import com.datadictmanage.modeling.application.dto.UpdateFieldDTO;
+import com.datadictmanage.modeling.application.dto.RelationDTO;
 import com.datadictmanage.common.exception.BizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -136,5 +139,159 @@ public class ModelDomainService {
         if (!model.getProjectId().equals(projectId)) {
             throw BizException.forbidden("模型不属于项目 [" + projectId + "]");
         }
+    }
+
+    // ── 字段管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 向实体添加字段
+     *
+     * @param model     模型对象
+     * @param entityId  实体 ID
+     * @param dto       字段数据
+     * @param operatorId 操作人
+     * @return 新建的 FieldBO
+     */
+    public FieldBO addField(ModelBO model, String entityId, AddFieldDTO dto, String operatorId) {
+        EntityBO entity = model.getEntities().stream()
+                .filter(e -> e.getId().equals(entityId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("实体", entityId));
+
+        // 领域规则：字段名唯一
+        boolean nameExists = entity.getFields().stream()
+                .anyMatch(f -> f.getName().equals(dto.getName()));
+        if (nameExists) {
+            throw BizException.conflict("字段名 \"" + dto.getName() + "\" 已存在");
+        }
+
+        FieldBO field = FieldBO.builder()
+                .id(UUID.randomUUID().toString())
+                .name(dto.getName())
+                .comment(dto.getComment() != null ? dto.getComment() : "")
+                .baseType(dto.getBaseType())
+                .length(dto.getLength())
+                .precision(dto.getPrecision())
+                .scale(dto.getScale())
+                .nullable(dto.getNullable() != null ? dto.getNullable() : true)
+                .primaryKey(dto.getPrimaryKey() != null ? dto.getPrimaryKey() : false)
+                .unique(dto.getUnique() != null ? dto.getUnique() : false)
+                .autoIncrement(dto.getAutoIncrement() != null ? dto.getAutoIncrement() : false)
+                .defaultValue(dto.getDefaultValue())
+                .sortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : entity.getFields().size())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        entity.addField(field);
+        log.info("[领域服务] 实体 {} 添加字段 {}", entityId, dto.getName());
+        return field;
+    }
+
+    /**
+     * 更新字段
+     *
+     * @param model     模型对象
+     * @param entityId  实体 ID
+     * @param fieldId   字段 ID
+     * @param dto       更新数据
+     * @param operatorId 操作人
+     */
+    public void updateField(ModelBO model, String entityId, String fieldId, UpdateFieldDTO dto, String operatorId) {
+        EntityBO entity = model.getEntities().stream()
+                .filter(e -> e.getId().equals(entityId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("实体", entityId));
+
+        FieldBO field = entity.getFields().stream()
+                .filter(f -> f.getId().equals(fieldId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("字段", fieldId));
+
+        // 更新字段属性
+        if (dto.getName() != null) field.setName(dto.getName());
+        if (dto.getComment() != null) field.setComment(dto.getComment());
+        if (dto.getBaseType() != null) field.setBaseType(dto.getBaseType());
+        if (dto.getLength() != null) field.setLength(dto.getLength());
+        if (dto.getPrecision() != null) field.setPrecision(dto.getPrecision());
+        if (dto.getScale() != null) field.setScale(dto.getScale());
+        if (dto.getNullable() != null) field.setNullable(dto.getNullable());
+        if (dto.getUnique() != null) field.setUnique(dto.getUnique());
+        if (dto.getDefaultValue() != null) field.setDefaultValue(dto.getDefaultValue());
+        field.setUpdatedAt(LocalDateTime.now());
+
+        log.info("[领域服务] 更新字段: {}", fieldId);
+    }
+
+    /**
+     * 删除字段
+     *
+     * @param model     模型对象
+     * @param entityId  实体 ID
+     * @param fieldId   字段 ID
+     * @param operatorId 操作人
+     */
+    public void deleteField(ModelBO model, String entityId, String fieldId, String operatorId) {
+        EntityBO entity = model.getEntities().stream()
+                .filter(e -> e.getId().equals(entityId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("实体", entityId));
+
+        boolean removed = entity.getFields().removeIf(f -> f.getId().equals(fieldId));
+        if (!removed) {
+            throw BizException.notFound("字段", fieldId);
+        }
+
+        log.info("[领域服务] 删除字段: entity={}, field={}", entityId, fieldId);
+    }
+
+    // ── 关系管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 添加实体间关系
+     *
+     * @param model     模型对象
+     * @param dto       关系数据
+     * @param operatorId 操作人
+     * @return 新建的关系
+     */
+    public ModelBO.Relation addRelation(ModelBO model, RelationDTO dto, String operatorId) {
+        // 验证源实体和目标实体存在
+        boolean fromExists = model.getEntities().stream()
+                .anyMatch(e -> e.getId().equals(dto.getFromEntityId()));
+        boolean toExists = model.getEntities().stream()
+                .anyMatch(e -> e.getId().equals(dto.getToEntityId()));
+
+        if (!fromExists) throw BizException.notFound("源实体", dto.getFromEntityId());
+        if (!toExists) throw BizException.notFound("目标实体", dto.getToEntityId());
+
+        ModelBO.Relation relation = ModelBO.Relation.builder()
+                .id(UUID.randomUUID().toString())
+                .fromEntityId(dto.getFromEntityId())
+                .toEntityId(dto.getToEntityId())
+                .type(dto.getType())
+                .comment(dto.getComment() != null ? dto.getComment() : "")
+                .foreignKeyName(dto.getForeignKeyName())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        model.addRelation(relation);
+        log.info("[领域服务] 添加关系: from={}, to={}", dto.getFromEntityId(), dto.getToEntityId());
+        return relation;
+    }
+
+    /**
+     * 删除关系
+     *
+     * @param model     模型对象
+     * @param relationId 关系 ID
+     * @param operatorId 操作人
+     */
+    public void deleteRelation(ModelBO model, String relationId, String operatorId) {
+        boolean removed = model.getRelations().removeIf(r -> r.getId().equals(relationId));
+        if (!removed) {
+            throw BizException.notFound("关系", relationId);
+        }
+        log.info("[领域服务] 删除关系: {}", relationId);
     }
 }

@@ -2,6 +2,9 @@ package com.datadictmanage.modeling.application.service;
 
 import com.datadictmanage.modeling.application.assembler.ModelAssembler;
 import com.datadictmanage.modeling.application.dto.CreateModelDTO;
+import com.datadictmanage.modeling.application.dto.AddFieldDTO;
+import com.datadictmanage.modeling.application.dto.UpdateFieldDTO;
+import com.datadictmanage.modeling.application.dto.RelationDTO;
 import com.datadictmanage.modeling.domain.event.ModelCreatedEvent;
 import com.datadictmanage.modeling.domain.model.ModelBO;
 import com.datadictmanage.modeling.domain.repository.ModelRepository;
@@ -158,5 +161,109 @@ public class ModelingFacade {
         // 此处为骨架实现，实际对接 @ddm/db-dialect 或通过 ACL 适配
         log.info("[应用层] 生成 DDL: model={}, dbType={}", modelId, dbType);
         return "-- DDL 生成功能由 SqlDialectPort（防腐层）实现\n-- 模型: " + model.getName();
+    }
+
+    // ── 字段管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 向实体添加字段
+     *
+     * @param modelId    模型 ID
+     * @param entityId   实体 ID
+     * @param dto        字段数据
+     * @param operatorId 操作人
+     * @return 更新后的模型详情
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO addField(String modelId, String entityId, AddFieldDTO dto, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.addField(model, entityId, dto, operatorId);
+        modelRepository.save(model);
+
+        log.info("[应用层] 添加字段: model={}, entity={}, field={}", modelId, entityId, dto.getName());
+        return modelAssembler.toVO(model);
+    }
+
+    /**
+     * 更新字段
+     *
+     * @param modelId    模型 ID
+     * @param entityId   实体 ID
+     * @param fieldId    字段 ID
+     * @param dto        更新数据
+     * @param operatorId 操作人
+     * @return 更新后的模型详情
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO updateField(String modelId, String entityId, String fieldId, UpdateFieldDTO dto, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.updateField(model, entityId, fieldId, dto, operatorId);
+        modelRepository.save(model);
+
+        log.info("[应用层] 更新字段: model={}, entity={}, field={}", modelId, entityId, fieldId);
+        return modelAssembler.toVO(model);
+    }
+
+    /**
+     * 删除字段
+     *
+     * @param modelId    模型 ID
+     * @param entityId   实体 ID
+     * @param fieldId    字段 ID
+     * @param operatorId 操作人
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteField(String modelId, String entityId, String fieldId, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.deleteField(model, entityId, fieldId, operatorId);
+        modelRepository.save(model);
+
+        log.info("[应用层] 删除字段: model={}, entity={}, field={}", modelId, entityId, fieldId);
+    }
+
+    // ── 关系管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 添加实体间关系
+     *
+     * @param modelId    模型 ID
+     * @param dto        关系数据
+     * @param operatorId 操作人
+     * @return 更新后的模型详情
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO addRelation(String modelId, RelationDTO dto, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.addRelation(model, dto, operatorId);
+        modelRepository.save(model);
+
+        log.info("[应用层] 添加关系: model={}, from={}, to={}", modelId, dto.getFromEntityId(), dto.getToEntityId());
+        return modelAssembler.toVO(model);
+    }
+
+    /**
+     * 删除关系
+     *
+     * @param modelId    模型 ID
+     * @param relationId 关系 ID
+     * @param operatorId 操作人
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRelation(String modelId, String relationId, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.deleteRelation(model, relationId, operatorId);
+        modelRepository.save(model);
+
+        log.info("[应用层] 删除关系: model={}, relation={}", modelId, relationId);
     }
 }

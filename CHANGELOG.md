@@ -5,6 +5,34 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.0.1-SNAPSHOT] - 2026-03-03 — Phase 1 完善
+
+### Added
+
+#### desktop-ce (Electron + React)
+- `ModelingService` — CE 版本建模服务入口（in-process 调用 core-engine）
+- `FieldPanel` — 字段编辑侧边栏组件（添加/删除字段 UI）
+- 集成 `core-engine` + `canvas-render` — 前后端联调完成
+- `useModel` hooks 完善 — 实现 `callModelingAPI` 函数
+
+#### ee-backend (Spring Boot 3, Java 17)
+- 字段管理 API：
+  - `POST /modeling/models/{modelId}/entities/{entityId}/fields` — 添加字段
+  - `PUT /modeling/models/{modelId}/entities/{entityId}/fields/{fieldId}` — 更新字段
+  - `DELETE /modeling/models/{modelId}/entities/{entityId}/fields/{fieldId}` — 删除字段
+- 关系管理 API：
+  - `POST /modeling/models/{modelId}/relations` — 添加关系
+  - `DELETE /modeling/models/{modelId}/relations/{relationId}` — 删除关系
+- `AddFieldDTO`、`UpdateFieldDTO`、`RelationDTO` — 新增 DTO 类
+- `ModelDomainService` — 新增字段/关系领域服务方法
+
+#### ModelBO
+- 新增 `Relation` 内部类 — 实体关系建模
+- 新增 `relations` 列表字段
+- 新增 `addRelation()` 方法
+
+---
+
 ## [1.0.0-SNAPSHOT] - 2024-03-01 — Phase 1: Core Modeling Engine
 
 ### Added

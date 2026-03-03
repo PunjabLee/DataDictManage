@@ -47,6 +47,10 @@ public class ModelBO {
     @Builder.Default
     private List<EntityBO> entities = new ArrayList<>();
 
+    /** 关系列表 */
+    @Builder.Default
+    private List<Relation> relations = new ArrayList<>();
+
     /** 创建人 */
     private String createdBy;
 
@@ -103,5 +107,32 @@ public class ModelBO {
         if (name.length() > 128) {
             throw new IllegalArgumentException("模型名称不能超过 128 个字符");
         }
+    }
+
+    // ── 关系管理 ──────────────────────────────────────────────────────────
+
+    /**
+     * 添加关系
+     */
+    public void addRelation(Relation relation) {
+        this.relations.add(relation);
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * Relation — 实体关系（内部类）
+     */
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Relation {
+        private String id;
+        private String fromEntityId;
+        private String toEntityId;
+        private String type;
+        private String comment;
+        private String foreignKeyName;
+        private LocalDateTime createdAt;
     }
 }

@@ -2,6 +2,9 @@ package com.datadictmanage.modeling.interfaces.rest;
 
 import com.datadictmanage.common.result.R;
 import com.datadictmanage.modeling.application.dto.CreateModelDTO;
+import com.datadictmanage.modeling.application.dto.AddFieldDTO;
+import com.datadictmanage.modeling.application.dto.UpdateFieldDTO;
+import com.datadictmanage.modeling.application.dto.RelationDTO;
 import com.datadictmanage.modeling.application.service.ModelingFacade;
 import com.datadictmanage.modeling.interfaces.vo.ModelVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -122,5 +125,90 @@ public class ModelController {
             @RequestParam(defaultValue = "MYSQL") String dbType
     ) {
         return R.ok(modelingFacade.generateDDL(modelId, dbType));
+    }
+
+    // ── 字段管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 向实体添加字段
+     *
+     * POST /modeling/models/{modelId}/entities/{entityId}/fields
+     */
+    @Operation(summary = "添加字段")
+    @PostMapping("/{modelId}/entities/{entityId}/fields")
+    public R<ModelVO> addField(
+            @PathVariable String modelId,
+            @PathVariable String entityId,
+            @Valid @RequestBody AddFieldDTO dto,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        return R.ok(modelingFacade.addField(modelId, entityId, dto, operatorId));
+    }
+
+    /**
+     * 更新字段
+     *
+     * PUT /modeling/models/{modelId}/entities/{entityId}/fields/{fieldId}
+     */
+    @Operation(summary = "更新字段")
+    @PutMapping("/{modelId}/entities/{entityId}/fields/{fieldId}")
+    public R<ModelVO> updateField(
+            @PathVariable String modelId,
+            @PathVariable String entityId,
+            @PathVariable String fieldId,
+            @Valid @RequestBody UpdateFieldDTO dto,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        return R.ok(modelingFacade.updateField(modelId, entityId, fieldId, dto, operatorId));
+    }
+
+    /**
+     * 删除字段
+     *
+     * DELETE /modeling/models/{modelId}/entities/{entityId}/fields/{fieldId}
+     */
+    @Operation(summary = "删除字段")
+    @DeleteMapping("/{modelId}/entities/{entityId}/fields/{fieldId}")
+    public R<Void> deleteField(
+            @PathVariable String modelId,
+            @PathVariable String entityId,
+            @PathVariable String fieldId,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        modelingFacade.deleteField(modelId, entityId, fieldId, operatorId);
+        return R.ok();
+    }
+
+    // ── 关系管理 ─────────────────────────────────────────────────────────
+
+    /**
+     * 添加实体间关系
+     *
+     * POST /modeling/models/{modelId}/relations
+     */
+    @Operation(summary = "添加关系")
+    @PostMapping("/{modelId}/relations")
+    public R<ModelVO> addRelation(
+            @PathVariable String modelId,
+            @Valid @RequestBody RelationDTO dto,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        return R.ok(modelingFacade.addRelation(modelId, dto, operatorId));
+    }
+
+    /**
+     * 删除关系
+     *
+     * DELETE /modeling/models/{modelId}/relations/{relationId}
+     */
+    @Operation(summary = "删除关系")
+    @DeleteMapping("/{modelId}/relations/{relationId}")
+    public R<Void> deleteRelation(
+            @PathVariable String modelId,
+            @PathVariable String relationId,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String operatorId
+    ) {
+        modelingFacade.deleteRelation(modelId, relationId, operatorId);
+        return R.ok();
     }
 }
