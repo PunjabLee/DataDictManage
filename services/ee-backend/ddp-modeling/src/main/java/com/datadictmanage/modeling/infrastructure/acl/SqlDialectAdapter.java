@@ -99,6 +99,43 @@ public class SqlDialectAdapter implements SqlDialectPort {
         ch.put("TEXT", "String");
         ch.put("DATETIME", "DateTime");
         DB_TYPE_MAPS.put("CLICKHOUSE", ch);
+        
+        // OceanBase
+        Map<String, String> oceanbase = new HashMap<>(DEFAULT_TYPE_MAP);
+        oceanbase.put("BOOLEAN", "TINYINT(1)");
+        oceanbase.put("TEXT", "TEXT");
+        DB_TYPE_MAPS.put("OCEANBASE", oceanbase);
+        
+        // GaussDB
+        Map<String, String> gaussdb = new HashMap<>(DEFAULT_TYPE_MAP);
+        gaussdb.put("INTEGER", "INTEGER");
+        gaussdb.put("VARCHAR", "VARCHAR2");
+        gaussdb.put("TEXT", "CLOB");
+        gaussdb.put("BOOLEAN", "NUMBER(1)");
+        DB_TYPE_MAPS.put("GAUSSDB", gaussdb);
+        
+        // Hive
+        Map<String, String> hive = new HashMap<>(DEFAULT_TYPE_MAP);
+        hive.put("STRING", "STRING");
+        hive.put("INTEGER", "INT");
+        hive.put("BIGINT", "BIGINT");
+        hive.put("BOOLEAN", "BOOLEAN");
+        hive.put("TEXT", "STRING");
+        hive.put("BLOB", "BINARY");
+        DB_TYPE_MAPS.put("HIVE", hive);
+        
+        // Doris / StarRocks
+        Map<String, String> doris = new HashMap<>(DEFAULT_TYPE_MAP);
+        doris.put("INTEGER", "INT");
+        doris.put("TEXT", "TEXT");
+        doris.put("JSON", "JSON");
+        DB_TYPE_MAPS.put("DORIS", doris);
+        
+        // TiDB
+        Map<String, String> tidb = new HashMap<>(DEFAULT_TYPE_MAP);
+        tidb.put("BOOLEAN", "TINYINT(1)");
+        tidb.put("TEXT", "TEXT");
+        DB_TYPE_MAPS.put("TIDB", tidb);
     }
 
     @Override
