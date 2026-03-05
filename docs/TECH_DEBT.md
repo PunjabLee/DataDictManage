@@ -48,12 +48,17 @@
 
 | 序号 | 标题 | 解决日期 | 备注 |
 |------|------|----------|------|
-| TD-01 | DDL 生成对接 | 2026-03-05 | SqlDialectAdapter 实现，支持 7 种数据库 |
+| TD-01 | DDL 生成对接 | 2026-03-05 | SqlDialectAdapter 实现，支持 12 种数据库 |
 | TD-02 | 快捷键系统 | 2026-03-05 | useHotkeys.ts 已实现 |
-| TD-03 | 模型持久化 | 2026-03-05 | model-persistence.ts 已实现 localStorage |
-| TD-04 | 版本管理后端 | 2026-03-05 | 快照存储到文件系统，支持创建/列表/回滚 |
+| TD-03 | 模型持久化 | 2026-03-05 | model-persistence.ts 已实现 |
+| TD-04 | 版本管理后端 | 2026-03-05 | 快照文件存储，支持创建/列表/回滚 |
 | TD-05 | ModelAssembler 完善 | 2026-03-05 | BO→VO 映射完整 |
 | TD-06 | ModelRepositoryImpl | 2026-03-05 | CRUD + 快照持久化完整 |
+| TD-17 | 三层建模服务 | 2026-03-05 | ModelLayerService + 自动布局 |
+| TD-18 | 字段库/枚举库 | 2026-03-05 | FieldLibrary + EnumLibrary |
+| TD-19 | 代码生成器 | 2026-03-05 | Java/Python 代码模板 |
+| TD-20 | 数据库直连 | 2026-03-05 | DbConnector + 双向同步 |
+| TD-21 | AI 智能建模 | 2026-03-05 | 自然语言→模型 + 审查 |
 
 ---
 
