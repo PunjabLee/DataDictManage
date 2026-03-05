@@ -3,6 +3,7 @@ package com.datadictmanage.modeling.domain.repository;
 import com.datadictmanage.modeling.domain.model.ModelBO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -78,6 +79,14 @@ public interface ModelRepository {
      * @return 快照 ID
      */
     String saveSnapshot(String modelId, String branchId, String snapshot, String versionTag);
+
+    /**
+     * 根据模型 ID 查询所有快照
+     *
+     * @param modelId 模型 ID
+     * @return 快照列表（按创建时间倒序）
+     */
+    List<Map<String, Object>> findSnapshots(String modelId);
 
     /**
      * 根据快照 ID 读取快照内容

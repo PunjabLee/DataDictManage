@@ -20,7 +20,7 @@
 | TD-03 | 模型持久化 | localStorage + IPC 存取未完整实现 | desktop-ce | 2h | ✅ |
 | TD-04 | 版本管理后端 | 快照创建/回滚 API 未实现 | ee-backend | 3h | ✅ |
 | TD-05 | ModelAssembler 完善 | EntityBO/FieldBO → DTO 映射不完整 | ee-backend | 1h | ✅ |
-| TD-06 | ModelRepositoryImpl | MyBatis 实现类缺失 | ee-backend | 4h | ⏳ |
+| TD-06 | ModelRepositoryImpl | MyBatis 实现类缺失 | ee-backend | 4h | ✅ |
 
 ### 🟡 中优先级
 
@@ -48,7 +48,12 @@
 
 | 序号 | 标题 | 解决日期 | 备注 |
 |------|------|----------|------|
-| - | - | - | - |
+| TD-01 | DDL 生成对接 | 2026-03-05 | SqlDialectAdapter 实现，支持 7 种数据库 |
+| TD-02 | 快捷键系统 | 2026-03-05 | useHotkeys.ts 已实现 |
+| TD-03 | 模型持久化 | 2026-03-05 | model-persistence.ts 已实现 localStorage |
+| TD-04 | 版本管理后端 | 2026-03-05 | 快照存储到文件系统，支持创建/列表/回滚 |
+| TD-05 | ModelAssembler 完善 | 2026-03-05 | BO→VO 映射完整 |
+| TD-06 | ModelRepositoryImpl | 2026-03-05 | CRUD + 快照持久化完整 |
 
 ---
 
