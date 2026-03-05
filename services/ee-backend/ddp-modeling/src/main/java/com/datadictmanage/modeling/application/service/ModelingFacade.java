@@ -58,6 +58,7 @@ public class ModelingFacade {
     private final ApplicationEventPublisher eventPublisher;
     private final SqlDialectPort sqlDialectPort;
     private final ObjectMapper objectMapper;
+    private final DocumentExportService documentExportService;
 
     // ── 模型 CRUD ─────────────────────────────────────────────────────────
 
@@ -424,5 +425,43 @@ public class ModelingFacade {
         }
 
         return modelAssembler.toVO(model);
+    }
+
+    // ── 文档导出 ─────────────────────────────────────────────────────────
+
+    /**
+     * 导出为 Word 文档
+     */
+    public byte[] exportToWord(String modelId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+        return documentExportService.exportToWord(model);
+    }
+
+    /**
+     * 导出为 Excel 文档
+     */
+    public byte[] exportToExcel(String modelId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+        return documentExportService.exportToExcel(model);
+    }
+
+    /**
+     * 导出为 HTML 文档
+     */
+    public byte[] exportToHtml(String modelId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+        return documentExportService.exportToHtml(model);
+    }
+
+    /**
+     * 导出为 Markdown 文档
+     */
+    public byte[] exportToMarkdown(String modelId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+        return documentExportService.exportToMarkdown(model);
     }
 }

@@ -257,4 +257,50 @@ public class ModelController {
     ) {
         return R.ok(modelingFacade.restoreSnapshot(modelId, snapshotId, operatorId));
     }
+
+    // ── 文档导出 ─────────────────────────────────────────────────────────
+
+    /**
+     * 导出为 Word 文档
+     *
+     * GET /modeling/models/{modelId}/export/word
+     */
+    @Operation(summary = "导出 Word 文档")
+    @GetMapping("/{modelId}/export/word")
+    public R<byte[]> exportWord(@PathVariable String modelId) {
+        return R.ok(modelingFacade.exportToWord(modelId));
+    }
+
+    /**
+     * 导出为 Excel 文档
+     *
+     * GET /modeling/models/{modelId}/export/excel
+     */
+    @Operation(summary = "导出 Excel 文档")
+    @GetMapping("/{modelId}/export/excel")
+    public R<byte[]> exportExcel(@PathVariable String modelId) {
+        return R.ok(modelingFacade.exportToExcel(modelId));
+    }
+
+    /**
+     * 导出为 HTML 文档
+     *
+     * GET /modeling/models/{modelId}/export/html
+     */
+    @Operation(summary = "导出 HTML 文档")
+    @GetMapping("/{modelId}/export/html")
+    public R<byte[]> exportHtml(@PathVariable String modelId) {
+        return R.ok(modelingFacade.exportToHtml(modelId));
+    }
+
+    /**
+     * 导出为 Markdown 文档
+     *
+     * GET /modeling/models/{modelId}/export/markdown
+     */
+    @Operation(summary = "导出 Markdown 文档")
+    @GetMapping("/{modelId}/export/markdown")
+    public R<byte[]> exportMarkdown(@PathVariable String modelId) {
+        return R.ok(modelingFacade.exportToMarkdown(modelId));
+    }
 }
