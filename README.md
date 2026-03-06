@@ -99,13 +99,13 @@ feature/xxx       ← 功能开发（从 develop 切出）
 
 - [x] Phase 0：工程骨架 & 架构底座
 - [x] Phase 1：核心建模引擎（CE + Pro）
-- [ ] Phase 2：EE 协作平台 & 数据标准
+- [x] Phase 2：EE 协作平台 & 数据标准
   - [x] TD-12: 数据标准 API (DataItem/CodeValue CRUD)
-  - [ ] TD-11: Web 版骨架 (qiankun 微前端)
-  - [ ] TD-09: 多人实时编辑 (Yjs CRDT)
-  - [ ] TD-10: 权限系统
-  - [ ] TD-07: 错误目录清理
-  - [ ] TD-08: 命名统一 (pdmaas → ddp)
+  - [x] TD-11: Web 版骨架 (qiankun 微前端)
+  - [x] TD-09: 多人实时编辑 (Yjs CRDT)
+  - [x] TD-10: 权限系统 (三级权限模型)
+  - [x] TD-07: 错误目录清理
+  - [x] TD-08: 命名统一 (pdmaas → ddp)
 - [ ] Phase 3：企业级全量 & 信创适配
 
 ## 许可证

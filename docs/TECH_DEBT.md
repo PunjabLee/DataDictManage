@@ -24,14 +24,14 @@
 
 ### 🟡 中优先级
 
-| 序号 | 标题 | 描述 | 模块 | 预计工时 |
-|------|------|------|------|----------|
-| TD-07 | 错误目录清理 | 存在 `{packages` 错误目录 | 项目根目录 | 0.5h |
-| TD-08 | 命名统一 | pdmaas-* 需统一为 ddp-* | ee-backend | 1h |
-| TD-09 | 多人实时编辑 | Yjs CRDT 集成未实现 | canvas-render | 8h |
-| TD-10 | 权限系统 | 团队/项目/模型三级权限 | ee-backend | 6h |
-| TD-11 | Web 版骨架 | qiankun 微前端框架 | web-ee | 8h |
-| TD-12 | 数据标准 API | DataItem/CodeValue CRUD | ee-backend | 4h |
+| 序号 | 标题 | 描述 | 模块 | 预计工时 | 状态 |
+|------|------|------|------|----------|------|
+| TD-07 | 错误目录清理 | 存在 `{packages` 错误目录 | 项目根目录 | 0.5h | ✅ |
+| TD-08 | 命名统一 | pdmaas-* 需统一为 ddp-* | ee-backend | 1h | ✅ |
+| TD-09 | 多人实时编辑 | Yjs CRDT 集成未实现 | canvas-render | 8h | ✅ |
+| TD-10 | 权限系统 | 团队/项目/模型三级权限 | ee-backend | 6h | ✅ |
+| TD-11 | Web 版骨架 | qiankun 微前端框架 | web-ee | 8h | ✅ |
+| TD-12 | 数据标准 API | DataItem/CodeValue CRUD | ee-backend | 4h | ✅ |
 
 ### 🟢 低优先级 (文档/注释)
 
