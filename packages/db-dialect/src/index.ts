@@ -103,6 +103,7 @@ export { GaussDBDialectImpl } from './dialects/gaussdb'
 export { HiveDialectImpl } from './dialects/hive'
 export { DorisDialectImpl } from './dialects/doris'
 export { TiDBDialectImpl } from './dialects/tidb'
+export { ShenTongDialectImpl } from './dialects/shentong'
 
 // 注册中心
 export { DialectRegistry } from './dialect-registry'
@@ -122,6 +123,7 @@ import { GaussDBDialectImpl } from './dialects/gaussdb'
 import { HiveDialectImpl } from './dialects/hive'
 import { DorisDialectImpl } from './dialects/doris'
 import { TiDBDialectImpl } from './dialects/tidb'
+import { ShenTongDialectImpl } from './dialects/shentong'
 
 /**
  * 创建并返回已注册所有内置方言的注册中心实例
@@ -147,6 +149,7 @@ export function createDefaultRegistry(): DialectRegistry {
     new HiveDialectImpl(),
     new DorisDialectImpl(),
     new TiDBDialectImpl(),
+    new ShenTongDialectImpl(),
   ])
   return registry
 }
