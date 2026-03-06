@@ -12,6 +12,7 @@
 
 import { useCallback } from 'react'
 import { useModelStore } from '../store/model.store'
+import { getModelingService, ModelingService } from '../service/modeling-service'
 import type { ModelDetailDTO } from '@ddm/core-engine'
 
 /**
@@ -121,32 +122,83 @@ export function useUndoRedo() {
 // ── 内部辅助函数（CE 版本使用本地模拟，EE 版本替换为 HTTP 调用） ─────────
 
 /**
- * CE 版本：从本地存储或内存中获取模型数据
- * EE 版本：替换为 fetch('/api/modeling/models/{modelId}')
+ * CE 版本：从本地服务获取模型数据
  */
 async function fetchModelFromLocalOrAPI(modelId: string): Promise<ModelDetailDTO> {
+  const service = getModelingService()
+  
   // 尝试从 Electron 主进程读取本地文件
   if (window.electronAPI) {
-    // CE 版本：从 userData 目录读取 .ddm 文件
     const result = await window.electronAPI.readFile(`models/${modelId}.ddm`)
     if (result.success && result.content) {
       return JSON.parse(result.content) as ModelDetailDTO
     }
   }
 
-  // Fallback：返回空模型（演示用）
-  return createEmptyModel(modelId)
+  // 从建模服务获取
+  try {
+    return await service.getModelDetail(modelId)
+  } catch {
+    // 返回空模型（演示用）
+    return createEmptyModel(modelId)
+  }
 }
 
 /**
- * CE 版本：调用建模 API（本地 in-process 调用 core-engine）
- * EE 版本：替换为 HTTP API 调用
+ * CE 版本：调用建模 API（通过 ModelingService in-process 调用）
  */
 async function callModelingAPI(action: string, params: Record<string, unknown>): Promise<ModelDetailDTO> {
-  // TODO: CE 版本直接调用 core-engine 的 ModelingAppService（in-process）
-  // EE 版本：return fetch('/api/modeling/' + action, { method: 'POST', body: JSON.stringify(params) }).then(r => r.json())
-  console.log(`[API] ${action}`, params)
-  throw new Error('CE 版本 API 调用未实现，请对接 core-engine 的 ModelingAppService')
+  const service = getModelingService()
+  
+  switch (action) {
+    case 'addEntity': {
+      const { modelId, name, comment } = params
+      return await service.addEntity({ modelId: modelId as string, name: name as string, comment: comment as string })
+    }
+    case 'removeEntity': {
+      const { modelId, entityId } = params
+      await service.removeEntity(modelId as string, entityId as string)
+      return await service.getModelDetail(modelId as string)
+    }
+    case 'addField': {
+      const { modelId, entityId, name, baseType, length, nullable, primaryKey, comment } = params
+      return await service.addField({
+        modelId: modelId as string,
+        entityId: entityId as string,
+        name: name as string,
+        baseType: baseType as string,
+        length: length as number | undefined,
+        nullable: nullable as boolean,
+        primaryKey: primaryKey as boolean,
+        comment: comment as string,
+      })
+    }
+    case 'modifyField': {
+      const { modelId, entityId, fieldId, name, comment, baseType, length } = params
+      return await service.modifyField({
+        modelId: modelId as string,
+        entityId: entityId as string,
+        fieldId: fieldId as string,
+        name: name as string,
+        comment: comment as string,
+        baseType: baseType as string,
+        length: length as number | undefined,
+      })
+    }
+    case 'removeField': {
+      const { modelId, entityId, fieldId } = params
+      await service.removeField(modelId as string, entityId as string, fieldId as string)
+      return await service.getModelDetail(modelId as string)
+    }
+    case 'generateDDL': {
+      const { modelId, dbType } = params
+      const result = await service.generateDDL(modelId as string, dbType as string)
+      console.log('[DDL Result]', result.sql)
+      return await service.getModelDetail(modelId as string)
+    }
+    default:
+      throw new Error(`Unknown action: ${action}`)
+  }
 }
 
 /**

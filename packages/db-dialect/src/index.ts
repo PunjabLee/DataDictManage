@@ -98,6 +98,11 @@ export { DaMengDialectImpl } from './dialects/dameng'
 export { KingbaseDialectImpl } from './dialects/kingbase'
 export { SQLServerDialectImpl } from './dialects/sqlserver'
 export { ClickHouseDialectImpl } from './dialects/clickhouse'
+export { OceanBaseDialectImpl } from './dialects/oceanbase'
+export { GaussDBDialectImpl } from './dialects/gaussdb'
+export { HiveDialectImpl } from './dialects/hive'
+export { DorisDialectImpl } from './dialects/doris'
+export { TiDBDialectImpl } from './dialects/tidb'
 
 // 注册中心
 export { DialectRegistry } from './dialect-registry'
@@ -112,6 +117,11 @@ import { DaMengDialectImpl } from './dialects/dameng'
 import { KingbaseDialectImpl } from './dialects/kingbase'
 import { SQLServerDialectImpl } from './dialects/sqlserver'
 import { ClickHouseDialectImpl } from './dialects/clickhouse'
+import { OceanBaseDialectImpl } from './dialects/oceanbase'
+import { GaussDBDialectImpl } from './dialects/gaussdb'
+import { HiveDialectImpl } from './dialects/hive'
+import { DorisDialectImpl } from './dialects/doris'
+import { TiDBDialectImpl } from './dialects/tidb'
 
 /**
  * 创建并返回已注册所有内置方言的注册中心实例
@@ -132,6 +142,11 @@ export function createDefaultRegistry(): DialectRegistry {
     new KingbaseDialectImpl(),
     new SQLServerDialectImpl(),
     new ClickHouseDialectImpl(),
+    new OceanBaseDialectImpl(),
+    new GaussDBDialectImpl(),
+    new HiveDialectImpl(),
+    new DorisDialectImpl(),
+    new TiDBDialectImpl(),
   ])
   return registry
 }

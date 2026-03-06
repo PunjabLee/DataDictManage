@@ -5,6 +5,36 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.0.1-SNAPSHOT] - 2026-03-03 — Phase 1 完善 + 测试
+
+### Added
+
+#### 单元测试
+- `model.test.ts` — Model 聚合根单元测试
+- `dialect.test.ts` — 7 种数据库方言测试
+- `ModelDomainServiceTest.java` — Java 领域服务测试
+
+#### 集成测试
+- `integration.test.ts` — 完整建模流程、撤销重做、版本管理、多数据库 DDL
+
+#### desktop-ce
+- `ModelingService` — CE 版本建模服务入口（in-process 调用 core-engine）
+- `FieldPanel` — 字段编辑侧边栏组件（添加/删除字段 UI）
+- `FieldEditor` — 完整字段属性编辑表单
+- `DDLModal` — DDL 预览弹窗（7 种数据库）
+- `VersionPanel` — 版本管理面板（快照/回滚）
+- 集成 `core-engine` + `canvas-render` — 前后端联调完成
+
+#### ee-backend
+- 字段管理 API
+- 关系管理 API
+- DTO 类
+
+#### 文档
+- `docs/TECH_DEBT.md` — 技术债务备忘录
+
+---
+
 ## [1.0.0-SNAPSHOT] - 2024-03-01 — Phase 1: Core Modeling Engine
 
 ### Added
@@ -43,11 +73,11 @@ Format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 建模设计器页面（Canvas + Sidebar + Toolbar 布局）
 
 #### ee-backend (Spring Boot 3, Java 17)
-- Maven 多模块（pdmaas-common/gateway/auth/modeling）
-- `pdmaas-common`：统一响应 `R<T>`、`BizException`、全局异常处理器、分页工具
-- `pdmaas-gateway`：Spring Cloud Gateway 路由/限流配置
-- `pdmaas-auth`：JWT 签发（JJWT 0.12）、登录/刷新/登出接口
-- `pdmaas-modeling`：完整 DDD 四层
+- Maven 多模块（ddp-common/gateway/auth/modeling）
+- `ddp-common`：统一响应 `R<T>`、`BizException`、全局异常处理器、分页工具
+- `ddp-gateway`：Spring Cloud Gateway 路由/限流配置
+- `ddp-auth`：JWT 签发（JJWT 0.12）、登录/刷新/登出接口
+- `ddp-modeling`：完整 DDD 四层
   - 接入层：`ModelController`、`ModelVO`
   - 应用层：`ModelingFacade`、`CreateModelDTO`、`ModelAssembler`
   - 领域层：`ModelBO/EntityBO/FieldBO`、`ModelRepository`（接口）、`ModelDomainService`、`ModelCreatedEvent`

@@ -19,14 +19,18 @@ import React, { useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useModelStore } from '../store/model.store'
 import { useModelLoader } from '../hooks/useModel'
+import { useHotkeys } from '../hooks/useHotkeys'
 import { Sidebar } from '../components/Sidebar'
 import { Toolbar } from '../components/Toolbar'
+import { FieldPanel } from '../components/FieldPanel'
 import { CanvasEngine, RenderGraph, RenderNode, RenderEdge, NodeState, EdgeStyle, RelationMark } from '@ddm/canvas-render'
 
 /**
  * 建模设计器页面
  */
 export const ModelDesigner: React.FC = () => {
+  // 启用快捷键
+  useHotkeys()
   const { modelId } = useParams<{ modelId: string }>()
   const navigate = useNavigate()
   const { fetchAndLoadModel } = useModelLoader()
@@ -178,6 +182,9 @@ export const ModelDesigner: React.FC = () => {
           {/* 缩放比例显示 */}
           <ZoomIndicator engineRef={engineRef} />
         </div>
+
+        {/* 右侧字段编辑面板 */}
+        <FieldPanel />
       </div>
     </div>
   )
