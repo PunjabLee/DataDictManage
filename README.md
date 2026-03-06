@@ -106,7 +106,12 @@ feature/xxx       ← 功能开发（从 develop 切出）
   - [x] TD-10: 权限系统 (三级权限模型)
   - [x] TD-07: 错误目录清理
   - [x] TD-08: 命名统一 (pdmaas → ddp)
-- [ ] Phase 3：企业级全量 & 信创适配
+- [x] Phase 3：企业级全量 & 信创适配
+  - [x] 团队上下文 (Team/Project/TeamMember)
+  - [x] 审计日志 (AuditLog)
+  - [x] 信创数据库 (ShenTong 方言)
+  - [x] 工作流审批 (Flowable)
+  - [x] API 开放平台 (OpenAPI)
 
 ## 许可证
 
