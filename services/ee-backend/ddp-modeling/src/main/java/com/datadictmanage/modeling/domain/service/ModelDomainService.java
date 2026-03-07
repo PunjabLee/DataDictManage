@@ -294,4 +294,102 @@ public class ModelDomainService {
         }
         log.info("[领域服务] 删除关系: {}", relationId);
     }
+
+    // ── 实体管理扩展 ─────────────────────────────────────────────────────────
+
+    /**
+     * 更新实体
+     */
+    public void updateEntity(ModelBO model, String entityId, String name, String comment) {
+        EntityBO entity = model.getEntities().stream()
+                .filter(e -> e.getId().equals(entityId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("实体", entityId));
+
+        ModelBO.validateName(name);
+        entity.setName(name);
+        entity.setComment(comment != null ? comment : "");
+        log.info("[领域服务] 更新实体: {}", entityId);
+    }
+
+    /**
+     * 删除实体
+     */
+    public void deleteEntity(ModelBO model, String entityId) {
+        boolean removed = model.getEntities().removeIf(e -> e.getId().equals(entityId));
+        if (!removed) {
+            throw BizException.notFound("实体", entityId);
+        }
+        // 同时删除与该实体相关的关系
+        model.getRelations().removeIf(r -> 
+            r.getFromEntityId().equals(entityId) || r.getToEntityId().equals(entityId));
+        log.info("[领域服务] 删除实体: {}", entityId);
+    }
+
+    /**
+     * 调整实体顺序
+     */
+    public void reorderEntity(ModelBO model, String entityId, Integer newOrder) {
+        EntityBO entity = model.getEntities().stream()
+                .filter(e -> e.getId().equals(entityId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("实体", entityId));
+
+        entity.setSortOrder(newOrder);
+        log.info("[领域服务] 调整实体顺序: {}, newOrder={}", entityId, newOrder);
+    }
+
+    /**
+     * 更新关系
+     */
+    public void updateRelation(ModelBO model, String relationId, RelationDTO dto) {
+        ModelBO.Relation relation = model.getRelations().stream()
+                .filter(r -> r.getId().equals(relationId))
+                .findFirst()
+                .orElseThrow(() -> BizException.notFound("关系", relationId));
+
+        relation.setType(dto.getType());
+        relation.setComment(dto.getComment() != null ? dto.getComment() : "");
+        relation.setForeignKeyName(dto.getForeignKeyName());
+        log.info("[领域服务] 更新关系: {}", relationId);
+    }
+
+    /**
+     * 自动检测关系（基于外键命名规则）
+     */
+    public void detectRelations(ModelBO model) {
+        // 简单的外键检测规则
+        for (EntityBO entity : model.getEntities()) {
+            for (FieldBO field : entity.getFields()) {
+                String fieldName = field.getName().toLowerCase();
+                // 检测以 _id 结尾的字段
+                if (fieldName.endsWith("_id") && !field.isPrimaryKey()) {
+                    String refTable = fieldName.replace("_id", "");
+                    // 查找可能的目标实体
+                    for (EntityBO target : model.getEntities()) {
+                        String targetName = target.getName().toLowerCase();
+                        if (targetName.equals(refTable) || targetName.equals(refTable + "s")) {
+                            // 检查是否已存在关系
+                            boolean exists = model.getRelations().stream()
+                                    .anyMatch(r -> r.getFromEntityId().equals(entity.getId()) 
+                                            && r.getToEntityId().equals(target.getId()));
+                            if (!exists) {
+                                ModelBO.Relation relation = ModelBO.Relation.builder()
+                                        .id(UUID.randomUUID().toString())
+                                        .fromEntityId(entity.getId())
+                                        .toEntityId(target.getId())
+                                        .type("MANY_TO_ONE")
+                                        .comment("自动检测: " + field.getName())
+                                        .foreignKeyName("fk_" + entity.getName() + "_" + target.getName())
+                                        .createdAt(LocalDateTime.now())
+                                        .build();
+                                model.addRelation(relation);
+                                log.info("[领域服务] 自动检测关系: {} -> {}", entity.getName(), target.getName());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

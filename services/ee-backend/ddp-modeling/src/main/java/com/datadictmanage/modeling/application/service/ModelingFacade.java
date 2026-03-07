@@ -464,4 +464,80 @@ public class ModelingFacade {
                 .orElseThrow(() -> BizException.notFound("模型", modelId));
         return documentExportService.exportToMarkdown(model);
     }
+
+    // ── 实体管理扩展 ─────────────────────────────────────────────────────────
+
+    /**
+     * 更新实体
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO updateEntity(String modelId, String entityId, String name, String comment, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.updateEntity(model, entityId, name, comment);
+        modelRepository.save(model);
+
+        log.info("[应用层] 更新实体: model={}, entity={}", modelId, entityId);
+        return modelAssembler.toVO(model);
+    }
+
+    /**
+     * 删除实体
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteEntity(String modelId, String entityId, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.deleteEntity(model, entityId);
+        modelRepository.save(model);
+
+        log.info("[应用层] 删除实体: model={}, entity={}", modelId, entityId);
+    }
+
+    /**
+     * 调整实体顺序
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO reorderEntity(String modelId, String entityId, Integer newOrder, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.reorderEntity(model, entityId, newOrder);
+        modelRepository.save(model);
+
+        log.info("[应用层] 调整实体顺序: model={}, entity={}, order={}", modelId, entityId, newOrder);
+        return modelAssembler.toVO(model);
+    }
+
+    /**
+     * 更新关系
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO updateRelation(String modelId, String relationId, RelationDTO dto, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.updateRelation(model, relationId, dto);
+        modelRepository.save(model);
+
+        log.info("[应用层] 更新关系: model={}, relation={}", modelId, relationId);
+        return modelAssembler.toVO(model);
+    }
+
+    /**
+     * 自动检测关系
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ModelVO detectRelations(String modelId, String operatorId) {
+        ModelBO model = modelRepository.findById(modelId)
+                .orElseThrow(() -> BizException.notFound("模型", modelId));
+
+        modelDomainService.detectRelations(model);
+        modelRepository.save(model);
+
+        log.info("[应用层] 自动检测关系: model={}", modelId);
+        return modelAssembler.toVO(model);
+    }
 }
