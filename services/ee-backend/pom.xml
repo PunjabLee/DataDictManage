@@ -45,6 +45,7 @@
     <jjwt.version>0.12.3</jjwt.version>
     <lombok.version>1.18.30</lombok.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
+    <flyway.version>10.4.1</flyway.version>
   </properties>
 
   <!-- 依赖版本管理（子模块无需声明版本） -->
@@ -105,6 +106,18 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${mapstruct.version}</version>
+      </dependency>
+
+      <!-- Flyway 数据库迁移 -->
+      <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>${flyway.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-mysql</artifactId>
+        <version>${flyway.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
