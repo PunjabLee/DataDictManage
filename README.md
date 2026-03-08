@@ -97,21 +97,42 @@ feature/xxx       ← 功能开发（从 develop 切出）
 
 ## 开发进度
 
+### ✅ 已完成
+
 - [x] Phase 0：工程骨架 & 架构底座
 - [x] Phase 1：核心建模引擎（CE + Pro）
 - [x] Phase 2：EE 协作平台 & 数据标准
-  - [x] TD-12: 数据标准 API (DataItem/CodeValue CRUD)
-  - [x] TD-11: Web 版骨架 (qiankun 微前端)
-  - [x] TD-09: 多人实时编辑 (Yjs CRDT)
-  - [x] TD-10: 权限系统 (三级权限模型)
-  - [x] TD-07: 错误目录清理
-  - [x] TD-08: 命名统一 (pdmaas → ddp)
 - [x] Phase 3：企业级全量 & 信创适配
-  - [x] 团队上下文 (Team/Project/TeamMember)
-  - [x] 审计日志 (AuditLog)
-  - [x] 信创数据库 (ShenTong 方言)
-  - [x] 工作流审批 (Flowable)
-  - [x] API 开放平台 (OpenAPI)
+
+### 🚧 当前版本 v1.0.1-SNAPSHOT (2026-03)
+
+**核心功能**
+- [x] ER 图设计器（Canvas 渲染 + 交互）
+- [x] 实体/字段/关系管理
+- [x] 13 种数据库方言（MySQL/PostgreSQL/Oracle/达梦/金仓/SQL Server/ClickHouse 等）
+- [x] DDL 预览与导出
+- [x] 版本管理（快照/回滚）
+- [x] 数据标准（DataItem/CodeValue）
+- [x] 团队协作（Team/Project/TeamMember）
+- [x] 三级权限模型
+- [x] 多人实时编辑（Yjs CRDT）
+- [x] 工作流审批（Flowable）
+- [x] API 开放平台
+
+**技术完善**
+- [x] 单元测试覆盖（core-engine/ee-backend）
+- [x] 集成测试
+- [x] Flyway 数据库迁移
+- [x] 依赖版本锁定
+- [x] 技术债务清理（30 项全部完成）
+
+### 📋 发布计划
+
+| 版本 | 目标 | 状态 |
+|------|------|------|
+| DDM-CE 1.0.0 | 开源发布 | ✅ Ready |
+| DDM-Pro 1.0.0 | 商业版 Alpha | ⏳ Planning |
+| DDM-EE 1.0.0 | 企业版 Beta | ⏳ Planning |
 
 ## 许可证
 
